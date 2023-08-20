@@ -23,6 +23,9 @@ devDependencies:
   '@web/test-runner-playwright':
     specifier: ^0.10.1
     version: 0.10.1
+  playwright:
+    specifier: ^1.37.1
+    version: 1.37.1
   prettier:
     specifier: ^3.0.2
     version: 3.0.2
