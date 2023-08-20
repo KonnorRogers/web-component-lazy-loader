@@ -6,7 +6,6 @@
  * @property {boolean} [force] - If we should skip the check to see if it's already been defined.
  */
 
-
 /**
  * @typedef {Map<string, LazyComponent>} LazyComponents
  */
@@ -15,20 +14,19 @@
  * @typedef {Element | ShadowRoot | Document} RootElement
  */
 
-
 /**
  * Base implementation of the lazy loader.
  * Feel free to grab this if you want to extend the lazy loader implementation.
  */
 export default class LazyLoaderClass {
   /**
-   * @param {Record<string, LazyComponent>} components
+   * @param {{ rootElement?: RootElement, components?: Record<string, LazyComponent> }} [options={}]
    */
-  constructor (components = {}) {
+  constructor(options = {}) {
     /**
      * @type {MutationObserver}
      */
-    this.observer = new MutationObserver(mutations => {
+    this.observer = new MutationObserver((mutations) => {
       for (const { addedNodes } of mutations) {
         for (const node of Array.from(addedNodes)) {
           if (node.nodeType === Node.ELEMENT_NODE) {
@@ -41,61 +39,61 @@ export default class LazyLoaderClass {
     /**
      * @type {LazyComponents}
      */
-    this.components = new Map(Object.entries(components || {}))
+    this.components = new Map(Object.entries(options.components || {}));
 
     /**
      * @type {RootElement}
      */
-    this.rootElement = document
+    this.rootElement = options.rootElement ? options.rootElement : document;
 
     /**
      * @type {boolean}
      */
-    this.running = false
+    this.running = false;
   }
 
   // Extracted to not use getters / setters because typescript casts the args to always be a Map.
   /**
-   *
+   * Overwrite the existing "components" on the LazyLoader.
    * @param {Record<string, LazyComponent>} components - Converts the components object to a map.
    */
-  setComponents (components) {
-    this.components = new Map(Object.entries(components))
-    this.initialCheck()
+  setComponents(components) {
+    this.components = new Map(Object.entries(components));
+    this.initialCheck();
   }
 
   /**
    * Start listening for new tags and perform and initial dom check.
    * @return {LazyLoaderClass}
    */
-  start () {
+  start() {
     // Listen for new undefined elements
     this.observer.observe(this.rootElement, { subtree: true, childList: true });
-    this.running = true
-    this.initialCheck(this.rootElement)
-    return this
+    this.running = true;
+    this.initialCheck(this.rootElement);
+    return this;
   }
 
   /**
    * @return {LazyLoaderClass}
    */
-  stop () {
-    this.observer.disconnect()
-    this.running = false
-    return this
+  stop() {
+    this.observer.disconnect();
+    this.running = false;
+    return this;
   }
 
   /**
    * @param {string} tagName
    * @return {void}
    */
-  register (tagName) {
-    const component = this.components.get(tagName)
+  register(tagName) {
+    const component = this.components.get(tagName);
 
-    if (component == null) return
+    if (component == null) return;
 
     if (this.shouldRegister(tagName)) {
-      component.register(tagName)
+      component.register(tagName);
     }
   }
 
@@ -105,40 +103,46 @@ export default class LazyLoaderClass {
 
    * @param {RootElement} [root=document] - The root element to attach the mutation observer. Defaults to document, but could also be attached to a shadowRoot or child element.
    */
-  initialCheck (root = document) {
-    if (this.running === false) return
+  initialCheck(root = document) {
+    if (this.running === false) return;
 
     /** @type {string | undefined} */
-    let rootTagName
+    let rootTagName;
 
     if ("tagName" in root) {
-      rootTagName = /** @type {string | undefined} */ (root.tagName.toLowerCase())
+      rootTagName = /** @type {string | undefined} */ (
+        root.tagName.toLowerCase()
+      );
     }
 
     if (rootTagName) {
-      this.register(rootTagName)
+      this.register(rootTagName);
     }
 
-    const query = this.tagNames.join(", ")
+    const query = this.tagNames.join(", ");
 
     // Can't pass an empty querySelector.
-    if (!query) return
+    if (!query) return;
 
     // Grab all tags found, throw them in a Set so we get unique values only.
-    const tags = new Set(Array.from(root.querySelectorAll(query)).map((el) => el.tagName.toLowerCase()))
+    const tags = new Set(
+      Array.from(root.querySelectorAll(query)).map((el) =>
+        el.tagName.toLowerCase(),
+      ),
+    );
 
     // Now iterate and register.
     tags.forEach((tagName) => {
-      this.register(tagName)
-    })
+      this.register(tagName);
+    });
   }
 
   /**
    * Grab all tag names registered in components
    * @return {string[]}
    */
-  get tagNames () {
-    return [...this.components.keys()]
+  get tagNames() {
+    return [...this.components.keys()];
   }
 
   /**
@@ -147,12 +151,12 @@ export default class LazyLoaderClass {
    * @param {string} tagName
    * @return {boolean}
    */
-  shouldRegister (tagName) {
-    const component = this.components.get(tagName)
+  shouldRegister(tagName) {
+    const component = this.components.get(tagName);
 
-    if (component == null) return false
-    if (component.force) return true
+    if (component == null) return false;
+    if (component.force) return true;
 
-    return !customElements.get(tagName)
+    return !customElements.get(tagName);
   }
 }

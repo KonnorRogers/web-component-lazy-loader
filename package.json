@@ -20,11 +20,15 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "rm -rf ./exports/**/*.d.ts && tsc",
+    "build": "rm -rf ./{internal,exports}/**/*.d.ts && tsc",
+    "fix": "prettier \"./**/*.js\" --write",
+    "check": "prettier \"./**/*.js\" --check",
     "deploy:patch": "npm run build && npm version patch && npm publish && git push --follow-tags",
     "deploy:minor": "npm run build && npm version minor && npm publish && git push --follow-tags",
     "deploy:major": "npm run build && npm version major && npm publish && git push --follow-tags",
-    "test": "web-test-runner"
+    "test": "web-test-runner",
+    "types:test": "npm run build && tsc --project ./tsconfig-test.json",
+    "verify": "npm run check && npm run types:test && npm run test"
   },
   "keywords": [
     "web-components",
@@ -44,8 +48,10 @@
     "@esm-bundle/chai": "4.3.4-fix.0",
     "@open-wc/testing": "^3.2.0",
     "@types/mocha": "^10.0.1",
+    "@types/sinon": "^10.0.16",
     "@web/test-runner": "^0.17.0",
     "@web/test-runner-playwright": "^0.10.1",
+    "prettier": "^3.0.2",
     "sinon": "^15.2.0",
     "typescript": "^5.1.6",
     "web-component-lazy-loader": "link:."

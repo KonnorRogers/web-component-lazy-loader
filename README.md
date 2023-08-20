@@ -2,6 +2,10 @@
 
 To lazy load web components when they're discovered in the DOM.
 
+## How it works
+
+
+
 ## Installation
 
 ```bash
@@ -14,28 +18,31 @@ npm install web-component-lazy-loader
 import LazyLoader from "web-component-lazy-loader"
 
 const lazyLoader = new LazyLoader({
-  "sl-button": {
-    // Auto-registering components
-    register () { import("@shoelace-style/shoelace/dist/components/button/button.js") }
-  }
-  "my-component": {
-    // Manually registering components
-    register (tagName) {
-      // !IMPORTANT! For most bundlers, you shouldn't use the `tagName` parameter
-      // because it will not be statically analyzable.
-      // If you're using importmaps, do what you want.
-      import("my-component").then((module) => {
-        window.customElements.define(tagName, module.MyComponent)
-      }
+  rootElement: document // document is the default, but can be any Element or ShadowRoot
+  components: {
+    "sl-button": {
+      // Auto-registering components
+      register () { import("@shoelace-style/shoelace/dist/components/button/button.js") }
     }
-  },
-  "my-other-component": {
-    // { force: true } says not to check if the component has already been registered.
-    force: true,
-    register (tagName) {
-      import("my-other-component").then((module) => {
-        window.customElements.define(tagName)
-      })
+    "my-component": {
+      // Manually registering components
+      register (tagName) {
+        // !IMPORTANT! For most bundlers, you shouldn't use the `tagName` parameter
+        // because it will not be statically analyzable.
+        // If you're using importmaps, do what you want.
+        import("my-component").then((module) => {
+          window.customElements.define(tagName, module.MyComponent)
+        }
+      }
+    },
+    "my-other-component": {
+      // { force: true } says not to check if the component has already been registered.
+      force: true,
+      register (tagName) {
+        import("my-other-component").then((module) => {
+          window.customElements.define(tagName)
+        })
+      }
     }
   }
 })
