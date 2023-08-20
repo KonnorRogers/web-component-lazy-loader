@@ -7,7 +7,7 @@
  */
 
 /**
- * @typedef {Map<string, LazyComponent>} LazyComponents
+ * @typedef {Map<string, LazyComponent>} LazyComponentMap
  */
 
 /**
@@ -37,7 +37,7 @@ export default class LazyLoaderClass {
     });
 
     /**
-     * @type {LazyComponents}
+     * @type {LazyComponentMap}
      */
     this.components = new Map(Object.entries(options.components || {}));
 
@@ -52,13 +52,13 @@ export default class LazyLoaderClass {
     this.running = false;
   }
 
-  // Extracted to not use getters / setters because typescript casts the args to always be a Map.
+  // Annoying work around to using real setters.
   /**
    * Overwrite the existing "components" on the LazyLoader.
-   * @param {Record<string, LazyComponent>} components - Converts the components object to a map.
+   * @param {Record<string, LazyComponent>} obj - Converts the components object to a map.
    */
-  setComponents(components) {
-    this.components = new Map(Object.entries(components));
+  setComponents(obj) {
+    this.components = new Map(Object.entries(obj || {}));
     this.initialCheck();
   }
 
