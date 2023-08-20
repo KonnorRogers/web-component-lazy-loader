@@ -1,0 +1,53 @@
+{
+  "name": "web-component-lazy-loader",
+  "version": "1.0.0",
+  "description": "A variety of simple components that match an aria-role",
+  "main": "./exports/lazy-loader.js",
+  "module": "./exports/lazy-loader.js",
+  "types": "./exports/lazy-loader.d.ts",
+  "exports": {
+    ".": "./exports/lazy-loader.js",
+    "./package.json": "./package.json",
+    "./exports/*": "./exports/*/*.js",
+    "./types/*": "./types/*/*.d.ts"
+  },
+  "type": "module",
+  "files": [
+    "exports",
+    "internal",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rm -rf ./exports/**/*.d.ts && tsc",
+    "deploy:patch": "npm run build && npm version patch && npm publish && git push --follow-tags",
+    "deploy:minor": "npm run build && npm version minor && npm publish && git push --follow-tags",
+    "deploy:major": "npm run build && npm version major && npm publish && git push --follow-tags",
+    "test": "web-test-runner"
+  },
+  "keywords": [
+    "web-components",
+    "aria"
+  ],
+  "license": "MIT",
+  "repository": "git@github.com:KonnorRogers/web-component-lazy-loader.git",
+  "bugs": {
+    "url": "https://github.com/KonnorRogers/web-component-lazy-loader/issues"
+  },
+  "homepage": "https://github.com/KonnorRogers/web-component-lazy-loader",
+  "author": "KonnorRogers <konnor5456@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@esm-bundle/chai": "4.3.4-fix.0",
+    "@open-wc/testing": "^3.2.0",
+    "@types/mocha": "^10.0.1",
+    "@web/test-runner": "^0.17.0",
+    "@web/test-runner-playwright": "^0.10.1",
+    "sinon": "^15.2.0",
+    "typescript": "^5.1.6",
+    "web-component-lazy-loader": "link:."
+  }
+}
