@@ -18,7 +18,7 @@ npm install web-component-lazy-loader
 import LazyLoader from "web-component-lazy-loader"
 
 const lazyLoader = new LazyLoader({
-  rootElement: document // document is the default, but can be any Element or ShadowRoot
+  rootElement: document, // document is the default, but can be any Element or ShadowRoot
   components: {
     "sl-button": {
       // Auto-registering components
