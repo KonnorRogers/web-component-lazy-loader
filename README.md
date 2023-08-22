@@ -28,7 +28,7 @@ const lazyLoader = new LazyLoader({
       // Manually registering components
       register (tagName) {
         // !IMPORTANT! For most bundlers, you shouldn't use the `tagName` parameter
-        // because it will not be statically analyzable.
+        // in the dynamic import because it will not be statically analyzable.
         // If you're using importmaps, do what you want.
         import("my-component").then((module) => {
           window.customElements.define(tagName, module.MyComponent)
