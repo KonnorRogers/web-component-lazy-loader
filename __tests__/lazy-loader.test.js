@@ -2,7 +2,7 @@
 import { assert } from "@esm-bundle/chai";
 import { MyComponent } from "./fixtures/components.js";
 import { CustomElementsRegistryStub } from "./mocks/custom-element-registry.js";
-import { html, fixture } from "@open-wc/testing";
+import { html, fixture, aTimeout } from "@open-wc/testing";
 
 import LazyLoader from "web-component-lazy-loader";
 
@@ -139,3 +139,36 @@ test("Should not register if the loader is stopped", async () => {
 
   assert.isOk(window.customElements.get("my-component"));
 });
+
+test("Should register the component if the body is swapped", async () => {
+  const div = await fixture(html`<div></div>`)
+
+  loader = new LazyLoader({
+    rootElement: div,
+    components: {
+      "my-component": {
+        register(tagName) {
+          window.customElements.define(tagName, MyComponent);
+        },
+      },
+    },
+  });
+
+  loader.start();
+
+
+  const otherDiv = document.createElement("div")
+  otherDiv.append(document.createElement("my-component"))
+
+  assert.isNotOk(window.customElements.get("my-component"));
+
+  div.append(otherDiv)
+
+  // @TODO: our stub doesnt implement this.
+  // await customElements.whenDefined("my-component")
+
+  // Give it a tick to register.
+  await aTimeout(10)
+
+  assert.isOk(window.customElements.get("my-component"));
+})

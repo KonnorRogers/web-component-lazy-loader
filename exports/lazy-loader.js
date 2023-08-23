@@ -30,7 +30,7 @@ export default class LazyLoaderClass {
       for (const { addedNodes } of mutations) {
         for (const node of Array.from(addedNodes)) {
           if (node.nodeType === Node.ELEMENT_NODE) {
-            this.register(/** @type {Element} */ (node).tagName.toLowerCase());
+            this.initialCheck(/** @type {RootElement} */ (node));
           }
         }
       }

@@ -4,7 +4,9 @@ To lazy load web components when they're discovered in the DOM.
 
 ## How it works
 
-
+Web Component Lazy Loader installs a MutationObserver on your root element and then
+queries through to find all the tagNames you have registered and calls the associated
+`register()` function for that tag.
 
 ## Installation
 
