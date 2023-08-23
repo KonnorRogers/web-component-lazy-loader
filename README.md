@@ -20,7 +20,7 @@ npm install web-component-lazy-loader
 import LazyLoader from "web-component-lazy-loader"
 
 const lazyLoader = new LazyLoader({
-  rootElement: document // document is the default, but can be any Element or ShadowRoot
+  rootElement: document, // document is the default, but can be any Element or ShadowRoot
   components: {
     "sl-button": {
       // Auto-registering components
@@ -30,7 +30,7 @@ const lazyLoader = new LazyLoader({
       // Manually registering components
       register (tagName) {
         // !IMPORTANT! For most bundlers, you shouldn't use the `tagName` parameter
-        // because it will not be statically analyzable.
+        // in the dynamic import because it will not be statically analyzable.
         // If you're using importmaps, do what you want.
         import("my-component").then((module) => {
           window.customElements.define(tagName, module.MyComponent)
